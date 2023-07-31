@@ -1,0 +1,431 @@
+\documentclass[10pt]{beamer}
+
+\usetheme[progressbar=frametitle]{metropolis}
+\usepackage{appendixnumberbeamer}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{babel}
+\bibliographystyle{plainnat}
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+\usepackage{amsmath, amsthm}
+\usepackage{xspace}
+\usepackage{enumerate}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+\input{basic_commands.tex}
+\input{basic_math_commands.tex}
+
+\title{Modelagem computacional de problemas de otimização}
+\subtitle{Dia 1}
+
+\author{Francisco N. C. Sobral \and Giovana Melo dos Santos \and Joaquim
+  Gabriel Martins} \date{XXXIII SEMAT 2023} \institute{DMA -
+  Universidade Estadual de Maringá}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Resumo}
+
+  \tableofcontents
+  
+\end{frame}
+
+\section{Motivação}
+
+\begin{frame}{Modelagem}
+
+  \begin{itemize}
+  \item A \alert{modelagem matemática} de um problema está associada à
+    \alert{escrever matematicamente} um problema qualquer
+
+  \item Em otimização, geralmente estamos interessados em olhar para
+    \alert{conjunto de pontos} e escolher algum
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}{Problema do churrasco}
+
+  \begin{itemize}
+  \item Uma pessoa vai fazer um churrasco para \alert<2>{$N$ pessoas}
+    
+  \item Vai comprar contra filé (R\$ 50 o kg) e costela (R\$ 20 o
+    kg). Para cada pessoa, \alert<2>{calcula-se $500$g de carne se for contra
+    filé ou $700$g se for costela}
+    
+  \item Deve haver um balanço entre a gordura e a proteína:
+    \alert<2>{no máximo 20g de gordura e no mínimo 50g de
+      proteína} por pessoa em média
+
+  \item Balanço nutricional fictício por 100g
+
+    \begin{center}
+      \begin{tabular}{lll}
+        \hline
+        & Gordura & Proteína \\ \hline
+        Costela & 5g & 5g \\ \hline
+        Contra filé & 10g & 2g \\ \hline
+      \end{tabular}
+    \end{center}
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}{Um problema de otimização}
+
+  \begin{onlyenv}<1>
+    Um problema de otimização geral é dado por
+    \[
+      \begin{array}{ll}
+        \mbox{minimizar} & f(x) \\
+        \mbox{sujeito a} & x \in \Omega
+      \end{array}
+    \]
+    com $f: \R^n \to \R$ e $\Omega \in \R^n$
+  \end{onlyenv}
+  
+  \begin{onlyenv}<2-3>
+    Um problema de otimização linear\only<3>{\alert{ binária}} é dado por
+    \[
+      \begin{array}{ll}
+        \mbox{minimizar} & c_1 x_1 + \dots + c_n x_n \\
+        \mbox{sujeito a} & a_{i1} x_1 + \dots + a_{in} x_n \le b_i, \quad i \in I_1 \\
+        & a_{i1} x_1 + \dots + a_{in} x_n = b_i, \quad i \in E \\
+        & a_{i1} x_1 + \dots + a_{in} x_n \ge b_i, \quad i \in I_2 \\
+        & x_i \alt<3>{\alert{\in \{0, 1\}}}{\ge 0}
+      \end{array}
+    \]
+  \end{onlyenv}
+
+\end{frame}
+
+\begin{frame}{Hipóteses}
+
+  Se um problema é modelado através de um problema de programação
+  linear, então assumimos
+  
+  \begin{itemize}
+  \item Proporcionalidade
+
+    A contribuição de uma variável é proporcional ao seu valor
+    
+  \item Aditividade
+
+    O valor da função objetivo total é a soma das contribuições
+    individuais, o mesmo para as restrições
+    
+  \item Divisibilidade
+
+    O valor de uma variável pode ser fracionado o quanto se necessite
+    (valores inteiros não são obrigatórios)
+    
+  \item Dados determinísticos
+
+    As constantes são bem definidas
+
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}{Problema do churrasco}
+
+  \begin{itemize}
+  \item Uma pessoa vai fazer um churrasco para $N$ pessoas
+    \alert{minimizando o custo financeiro}
+    
+  \item Vai comprar contra filé (R\$ 50 o kg) e costela (R\$ 20 o
+    kg). Para cada pessoa, calcula-se $500$g de carne se for contra
+    filé ou $700$g se for costela
+    
+  \item Deve haver um balanço entre a gordura e a proteína: no máximo
+    20g de gordura e no mínimo 50g de proteína por pessoa em média
+
+  \item Balanço nutricional fictício por 100g
+
+    \begin{center}
+      \begin{tabular}{lll}
+        \hline
+        & Gordura & Proteína \\ \hline
+        Costela & 5g & 5g \\ \hline
+        Contra filé & 10g & 2g \\ \hline
+      \end{tabular}
+    \end{center}
+  \end{itemize}
+  
+\end{frame}
+
+\section{Usando JuMP}
+
+\begin{frame}{JuMP}
+
+  \begin{itemize}
+  \item JuMP -- Julia for Mathematical Programming
+
+  \item Site: \url{https://jump.dev}
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}[fragile]{Primeiro modelo}
+
+  \begin{itemize}
+  \item<only@1> Considere
+  \[
+    \begin{array}{ll}
+      \mbox{Minimizar} & 12 x + 20 y \\
+      \mbox{Sujeita a} & 6x + 8y \ge 100 \\
+                       & 7x + 12y \ge 120 \\
+                       & x \ge 0 \\
+                       & y \in [0, 3]
+    \end{array}
+  \]
+  
+  Retirado de {\scriptsize
+    \url{https://jump.dev/JuMP.jl/stable/tutorials/getting_started/getting_started_with_JuMP/#An-example}}
+    
+  \item<only@2> Assumo que JuMP e HiGHS já estão instalados (Nosso ambiente já faz isso)
+
+  \item<only@3> Usando os pacotes
+\begin{verbatim}
+using JuMP, HiGHS
+\end{verbatim}
+
+  \item<only@4> Criando o modelo para ser resolvido pelo software HiGHS
+\begin{verbatim}
+modelo = Model(HiGHS.Optimizer)
+\end{verbatim}
+
+  \item<only@5> Criando as variáveis (com suas restrições)
+\begin{verbatim}
+@variable(modelo, x >= 0)
+@variable(modelo, 0 <= y <= 3)
+\end{verbatim}
+
+  \item<only@6> Adicionando as restrições
+\begin{verbatim}
+@constraint(modelo, c1, 6x + 8y >= 100)
+@constraint(modelo, c2, 7x + 12y >= 120)
+\end{verbatim}
+
+  \item<only@7> Função objetivo
+\begin{verbatim}
+@objective(modelo, Min, 12x + 20y)
+\end{verbatim}
+
+  \item<only@8> Resolvendo
+\begin{verbatim}
+optimize!(modelo)
+\end{verbatim}
+
+  \item<only@9> Mostra alguns resultados
+\begin{verbatim}
+@show termination_status(modelo)
+@show primal_status(modelo)
+@show dual_status(modelo)
+@show objective_value(modelo)
+@show value(x)
+@show value(y)
+\end{verbatim}
+    
+  \end{itemize}
+  
+\end{frame}
+
+\begin{frame}[fragile]{Criando variáveis}
+
+  \begin{center}
+\begin{verbatim}
+@variable(modelo, x)
+@variable(modelo, x[i = 1:10] >= 0)
+@variable(modelo, x[1:5, 1:3]
+
+u = [1, 3, 4, 5, 6]
+@variable(modelo, x[i = 1:5] <= u[i])
+\end{verbatim}
+  \end{center}
+  
+\end{frame}
+
+\begin{frame}[fragile]{Criando restrições}
+
+  \begin{center}
+\begin{verbatim}
+@constraint(modelo, 2 x[1] - x[3] == -10)
+
+a = [-10, 0, 3]
+@constraint(modelo, sum(x[j] for j = 1:3) == -10)
+
+A = [0 1 1;
+     1 2 0]
+b = [8, 10];
+@constraint(modelo, [i = 1:2],
+            sum(A[i, j] * x[j] for j = 1:3) <= b[i])
+\end{verbatim}
+  \end{center}
+  
+\end{frame}
+
+\begin{frame}[fragile]{Notação matricial}
+
+\begin{verbatim}
+A = [ 1 1 9  5
+      3 5 0  8
+      2 0 6 13 ]
+
+b = [7, 3, 5]
+c = [1, 3, 5, 2]
+
+modelo = Model(HiGHS.Optimizer)
+@variable(modelo, x[1:4] >= 0)
+@constraint(modelo, A * x .== b)
+@objective(modelo, Min, c' * x)
+
+optimize!(modelo)
+\end{verbatim}
+  
+\end{frame}
+
+\section{Alguns exemplos}
+
+\begin{frame}{O problema da dieta (animal)}
+
+  \begin{itemize}
+  \item<only@1> Uma empresa agrícola fabrica ração para aves
+  \item<only@1> Diversos ingredientes são misturados (milho, soja,
+    \dots) de forma a atingir a quantidade mínima de determinados
+    nutrientes (cálcio, proteína, \dots)
+
+  \item<only@2> Suponha que tenhamos \alert{$n$ ingredientes}
+  \item<only@2> Suponha que tenhamos \alert{$m$ nutrientes}
+  \item<only@2> Seja $x_j$ a quantidade utilizada para o ingrediente
+    $j$
+  \item<only@2> \textcolor{red}{Qual o problema de otimização que
+      vamos modelar?}
+
+  \item<only@3> Minimizar o custo de produção
+    \[
+      \sum_{j = 1}^n c_j x_j,
+    \]
+    onde $c_j$ é o custo para adquirir \alert{uma unidade} do produto
+    $j$
+    
+  \item<only@4> Produzir uma quantidade $b$ do produto final
+    \[
+      \sum_{j = 1}^n x_j = b
+    \]
+  \item<only@5> Satisfazer limites \alert{mínimos} e \alert{máximos}
+    de cada nutriente
+    \[
+      b \bar l_i \le \sum_{j = 1}^n a_{ij} x_j \le b \bar u_i, \quad i =
+      1, \dots, m
+    \]
+    onde
+    \begin{itemize}
+    \item $0 \le \bar l_i \le \bar u_i$ são os limites para \alert{uma
+        unidade} do nutriente $i$
+    \item $a_{ij}$ é a quantidade de nutriente $i$ que há \alert{em
+        uma unidade} do ingrediente $j$
+    \end{itemize}
+
+  \item<only@6> Há um limite superior para a quantidade do ingrediente
+    $j$ que pode ser comprada
+    \[
+      x_j \le u_j, \quad j = 1, \dots, n
+    \]
+  \end{itemize}
+
+  \begin{onlyenv}<7>
+    \[ 
+      \begin{array}{ll}
+        \mbox{Minimizar} & \displaystyle \sum_{j = 1}^n c_j x_j \\
+        \mbox{Sujeita a} & \displaystyle \sum_{j = 1}^n x_j = b \\[0.4cm]
+                         & \displaystyle b \bar l_i \le \sum_{j = 1}^n a_{ij} x_j \le b \bar u_i, i = 1, \dots, m \\[0.3cm]
+                         & 0 \le x_j \le u_j, i = 1, \dots, n
+      \end{array}
+    \]
+  \end{onlyenv}
+  
+\end{frame}
+
+\begin{frame}{Problema do financiamento}
+
+  \begin{itemize}
+  \item<only@1> A prefeitura de Maringá tem um grande projeto para ser
+    executado em 4 anos
+  \item<only@1> Os gastos previstos (em milhões) para cada ano são
+    \begin{center}
+      \begin{tabular}{cccc}
+        1 & 2 & 3 & 4 \\\hline
+        2 & 4 & 8 & 5
+      \end{tabular}
+    \end{center}
+  \item<only@2> A prefeitura irá emitir títulos de dívida (ou seja,
+    empréstimos) para realizar a obra que pagam juros
+    \textbf{simples} com \alert{previsão de taxas} dada por
+    \begin{center}
+      \begin{tabular}{cccc}
+        1 & 2 & 3 & 4 \\\hline
+        7\% & 6\% & 6,5\% & 7,5\%
+      \end{tabular}
+    \end{center}
+  \item<only@2> Os títulos começarão a cobrar juros \alert{após} o fim
+    da obra (quarto ano) e serão quitados após 20 anos
+
+  \item<only@3> Além disso, a prefeitura pode colocar dinheiro em uma
+    \alert{aplicação}, para usar em anos posteriores, que lhe rendem
+    juros anuais previstos como
+    \begin{center}
+      \begin{tabular}{cccc}
+        1 & 2 & 3 & 4 \\\hline
+        6\% & 5,5\% & 4,5\% & -
+      \end{tabular}
+    \end{center}
+    (No quarto ano, não faz sentido guardar dinheiro)
+
+  \item<only@4> Seja $x_j$ o valor obtido pela venda de títulos de
+    dívida no ano $j$, $j = 1, \dots, 4$
+  \item<only@4> Seja $y_j$ a quantia colocada na aplicação no ano $j$,
+    $j = 1, 2, 3$
+
+  \item<only@5> Desejamos minimizar a quantidade de juros paga
+    \[
+      20 \cdot 0,07 x_1 + 20 \cdot 0,06 x_2 + 20 \cdot 0,065 x_3 + 20
+      \cdot 0,075 x_4
+    \]
+  \item<only@6> Em cada ano, o valor usado no projeto ou vem dos
+    títulos vendidos ou vem das aplicações de anos anteriores
+
+  \item<only@6> Uma parte do valor obtido nos títulos pode ser
+    guardada em aplicação para uso futuro
+    \[
+      \begin{aligned}
+        x_1 \alert{- y_1} & = 2 \\
+        \alert{1,06 y_1} + x_2 - y_2 & = 4 \\
+        1,055 y_2 + x_3 - y_3 & = 8 \\
+        1,045 y_3 + x_4 & = 5
+      \end{aligned}
+    \]
+  \end{itemize}
+
+  \begin{onlyenv}<7>
+    \[
+      \begin{array}{ll}
+        \mbox{Minimizar} & 20 \cdot 0,07 x_1 + 20 \cdot 0,06 x_2 + 20 \cdot 0,065 x_3 + 20\cdot 0,075 x_4 \\
+        \mbox{Sujeita a} &         x_1 - y_1 = 2 \\
+                         & 1,06 y_1 + x_2 - y_2  = 4 \\
+                         & 1,055 y_2 + x_3 - y_3  = 8 \\
+                         & 1,045 y_3 + x_4 = 5 \\
+                         & x_j \ge 0,\quad j = 1, \dots, 4 \\
+                         & y_j \ge 0,\quad j = 1, 2, 3
+      \end{array}
+    \]
+  \end{onlyenv}
+  
+\end{frame}
+
+\section{O grande problema}
+
+\end{document}
