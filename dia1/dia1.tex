@@ -350,6 +350,49 @@ optimize!(modelo)
   
 \end{frame}
 
+\begin{frame}
+  \frametitle{Problema do Sudoku}
+
+  \begin{onlyenv}<1>
+    \begin{itemize}
+    \item Queremos resolver um Sudoku com dimensão $4 \times 4$
+    \item Temos um quadrado com 16 posições, 4 linhas, 4 colunas e 4
+      blocos $2 \times 2$
+    \item São dados os valores conhecidos $v_{ij} \in \mathcal{C}$
+    \item Em cada linha, coluna ou bloco deve existir um e apenas uma
+      ocorrência do número $n \in \{1 \dots, 4\}$
+    \end{itemize}
+  \end{onlyenv}
+
+  \begin{onlyenv}<2-4>
+    \begin{itemize}
+    \item<only@2> Utilizaremos variáveis binárias
+    \item<only@2> Seja $x_{ijk}$ indicando 1 se a posição $(i, j)$ possui o
+      valor $k$, e 0 caso contrário, para $i, j, k \in \{1, \dots, 4\}$
+    \item<only@3> Somente um valor valor por linha $\ell$
+      \[
+        \sum_{j = 1}^4 \sum_{k = 1}^4 x_{\alert{\ell}, j, k} = 1
+      \]
+    \item<only@3> Somente um valor por coluna $c$
+      \[
+        \sum_{i = 1}^4 \sum_{k = 1}^4 x_{i, \alert{c}, k} = 1
+      \]
+    \item<only@3> Somente um valor por bloco $(b_i, b_j)$, $b_i, b_j \in \{1, 2, 3\}$
+      \[
+        \alert{\sum_{i = 2(b_i - 1)}^{2b_i} \sum_{j = 2(b_j - 1)}^{2b_j}} \sum_{k = 1}^4 x_{i, j, k} = 1
+      \]
+    \item<only@4> $x \in \{0, 1\}$
+
+    \item<only@4> Lugares já preenchidos, para cada
+      $v_{ij} \in \mathcal{C}$
+      \[
+        x_{ij\ v_{ij}} = 1
+      \]
+    \end{itemize}
+  \end{onlyenv}
+
+\end{frame}
+
 \begin{frame}{Problema do financiamento}
 
   \begin{itemize}
@@ -427,5 +470,24 @@ optimize!(modelo)
 \end{frame}
 
 \section{O grande problema}
+
+\begin{frame}
+  \frametitle{O problema}
+
+  \begin{itemize}
+  \item Os professores do DMA têm direito a 3 meses consecutivos de
+    afastamento a cada 5 anos
+  \item A cada mês, no máximo 20\% dos professores pode estar
+    afastados
+  \item Uma vez recebido, os professores têm um prazo de 5 anos para
+    usufruir senão perdem o afastamento
+  \item Atualmente, cada professor $p$ tem até o prazo $t_p$ para
+    usufruir de seu afastamento. Após esse prazo, ele perde o atual e
+    ganha direito a outro
+  \item Queremos planejar os afastamentos para o horizonte dos
+    próximos 5 anos
+  \end{itemize}
+  
+\end{frame}
 
 \end{document}
