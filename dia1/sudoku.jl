@@ -52,6 +52,9 @@ end
 # ╔═╡ b59673fa-0b4a-4fcd-a718-889e14a83c6c
 @constraint(sudoku, [(i, j, k) in C], x[i, j, k] == 1)
 
+# ╔═╡ 985cdce6-0fc1-4623-9af8-d329411ed1ac
+@constraint(sudoku, [i = 1:N, j = 1:N], sum( x[i, j, k] for k = 1:N) == 1)
+
 # ╔═╡ d7ebe59a-57c6-4139-8812-8014fa8d3b1e
 @objective(sudoku, Min, 0)
 
@@ -95,7 +98,7 @@ JuMP = "~1.13.0"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.8.3"
+julia_version = "1.8.0"
 manifest_format = "2.0"
 project_hash = "64d2513ad1cf8e077b21ae412bf4837518ec71b9"
 
@@ -437,7 +440,7 @@ version = "1.0.0"
 [[deps.Tar]]
 deps = ["ArgTools", "SHA"]
 uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
-version = "1.10.1"
+version = "1.10.0"
 
 [[deps.Test]]
 deps = ["InteractiveUtils", "Logging", "Random", "Serialization"]
@@ -486,6 +489,7 @@ version = "17.4.0+0"
 # ╠═eda3fe41-2037-4d07-93c3-45bf64df97ee
 # ╠═d80ca533-41e5-444c-a378-34137410d6ea
 # ╠═b59673fa-0b4a-4fcd-a718-889e14a83c6c
+# ╠═985cdce6-0fc1-4623-9af8-d329411ed1ac
 # ╠═d7ebe59a-57c6-4139-8812-8014fa8d3b1e
 # ╠═f00829dd-1fb2-4a38-bb04-f76714a177ae
 # ╠═96f01e21-d5bd-4bbe-ad92-c4d6cd129e3a
