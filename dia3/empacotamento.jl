@@ -491,14 +491,15 @@ end
 
 # ╔═╡ 5a23026b-4251-4ba4-93f4-272f3b5ed7ee
 begin
-	circ_r = [2.0]
+	circ_r = [2.0, 1.0, 1.0, 1.0]
 	lista_poligonos = [
+		[[0.0 0.0; 1.0 0.0; 0.5 1.0], [0.0 0.5; 1.0 0.5; 0.5 -0.5]],
 	    [[0.0 0.0; 2.0 0.0; 2.0 2.0; 0.0 2.0]], 
 	    [[4.0 0.0; 6.0 0.0; 7.0 1.73; 6.0 3.46; 4.0 3.46; 3.0 1.73]],
 	    [[8.0 2.0; 10.0 0.0; 11.0 2.0; 9.0 3.0], [10.0 0.0; 16.0 3.0; 15.0 4.0; 11.0 2.0]]
 	]
-	L = 12.0
-	W = 12.0
+	L = 10.0
+	W = 10.0
 	lista_rotacionada =translacao_poligono(lista_poligonos)
 	rt = reta(lista_rotacionada)
 	nr = length(rt)
@@ -540,7 +541,7 @@ Plots = "~1.38.17"
 PLUTO_MANIFEST_TOML_CONTENTS = """
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.8.3"
+julia_version = "1.8.0"
 manifest_format = "2.0"
 project_hash = "39df40319edaa2d96523f70befe086ea55e64153"
 
@@ -783,10 +784,10 @@ uuid = "28b8d3ca-fb5f-59d9-8090-bfdbd6d07a71"
 version = "0.72.9"
 
 [[deps.GR_jll]]
-deps = ["Artifacts", "Bzip2_jll", "Cairo_jll", "FFMPEG_jll", "Fontconfig_jll", "GLFW_jll", "JLLWrappers", "JpegTurbo_jll", "Libdl", "Libtiff_jll", "Pixman_jll", "Qt6Base_jll", "Zlib_jll", "libpng_jll"]
-git-tree-sha1 = "f61f768bf090d97c532d24b64e07b237e9bb7b6b"
+deps = ["Artifacts", "Bzip2_jll", "Cairo_jll", "FFMPEG_jll", "Fontconfig_jll", "FreeType2_jll", "GLFW_jll", "JLLWrappers", "JpegTurbo_jll", "Libdl", "Libtiff_jll", "Pixman_jll", "Qt6Base_jll", "Zlib_jll", "libpng_jll"]
+git-tree-sha1 = "1596bab77f4f073a14c62424283e7ebff3072eca"
 uuid = "d2c73de3-f751-5644-a686-071e5b155ba9"
-version = "0.72.9+0"
+version = "0.72.9+1"
 
 [[deps.Gettext_jll]]
 deps = ["Artifacts", "CompilerSupportLibraries_jll", "JLLWrappers", "Libdl", "Libiconv_jll", "Pkg", "XML2_jll"]
@@ -1320,7 +1321,7 @@ version = "1.0.0"
 [[deps.Tar]]
 deps = ["ArgTools", "SHA"]
 uuid = "a4e569a6-e804-4fa4-b0f3-eef7a1d5b13e"
-version = "1.10.1"
+version = "1.10.0"
 
 [[deps.TensorCore]]
 deps = ["LinearAlgebra"]
